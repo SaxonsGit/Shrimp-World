@@ -1956,3 +1956,106 @@ body.modal-open{
     background: rgba(0,0,0,.08);
   }
 }
+
+
+
+/* =========================
+   MOBILE HEADER WIDTH FIX
+========================= */
+
+@media (max-width: 650px) {
+  .header {
+    overflow: visible;
+  }
+
+  .header__inner {
+    height: 84px;
+    gap: 8px;
+    padding-left: 10px;
+    padding-right: 10px;
+    justify-content: flex-start;
+  }
+
+  .brand {
+    min-width: 0;
+    flex: 1 1 auto;
+    gap: 8px;
+  }
+
+  .brand__logo {
+    width: 48px;
+    height: 48px;
+    flex: 0 0 48px;
+  }
+
+  .brand__meta {
+    min-width: 0;
+  }
+
+  .brand__name {
+    font-size: 20px;
+    white-space: nowrap;
+  }
+
+  .brand__tag {
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .mobile-menu-btn {
+    width: 46px;
+    height: 46px;
+    flex: 0 0 46px;
+    margin-left: 0;
+    margin-right: 4px;
+    border-radius: 16px;
+  }
+
+  .header__actions {
+    flex: 0 0 auto;
+    gap: 7px;
+  }
+
+  .iconbtn {
+    width: 46px;
+    height: 46px;
+    flex: 0 0 46px;
+  }
+
+  .iconbtn svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .cartcount {
+    top: -5px;
+    right: -5px;
+  }
+}
+
+@media (max-width: 390px) {
+  .brand__name {
+    font-size: 18px;
+  }
+
+  .brand__tag {
+    font-size: 12px;
+  }
+
+  .brand__logo {
+    width: 42px;
+    height: 42px;
+    flex-basis: 42px;
+  }
+
+  .mobile-menu-btn,
+  .iconbtn {
+    width: 42px;
+    height: 42px;
+    flex-basis: 42px;
+  }
+
+  .header__actions {
+    gap: 6px;
+  }
+}
