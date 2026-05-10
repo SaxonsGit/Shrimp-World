@@ -120,6 +120,7 @@
     pvRelated: $("#pvRelated"),
 
     // Header actions
+    nav: $(".nav"),
     cartCount: $("#cartCount"),
     searchBtn: $("#searchBtn"),
     cartBtn: $("#cartBtn"),
@@ -1847,6 +1848,41 @@ document.addEventListener("click", (e) => {
   });
 }
 
+
+
+/* -----------------------------
+ * Mobile Menu
+ * ----------------------------- */
+
+function wireMobileMenu() {
+
+  const mobileBtn = document.getElementById("mobileMenuBtn");
+
+  if (!mobileBtn || !els.nav) return;
+
+  mobileBtn.addEventListener("click", () => {
+
+    els.nav.classList.toggle("is-open");
+
+    const isOpen = els.nav.classList.contains("is-open");
+
+    mobileBtn.classList.toggle("is-active", isOpen);
+
+  });
+
+  // Close after clicking nav item
+
+  $$(".nav__link", els.nav).forEach(link => {
+
+    link.addEventListener("click", () => {
+      els.nav.classList.remove("is-open");
+      mobileBtn.classList.remove("is-active");
+    });
+
+  });
+
+}
+
   /* -----------------------------
    * Init
    * ----------------------------- */
@@ -1858,6 +1894,7 @@ document.addEventListener("click", (e) => {
   initCountdown();
 
   wireNav();
+  wireMobileMenu();
   wireProductControls();
   wireProductViewButtons();
   wireDiscount();
