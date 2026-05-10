@@ -44,7 +44,7 @@ export async function onRequestPost(context) {
 
     params.append("mode", "payment");
     params.append("success_url", `${env.DOMAIN}/success.html`);
-    params.append("cancel_url", `${env.DOMAIN}/cancel.html`);
+    params.append("cancel_url", `${env.DOMAIN}/index.html`);
     params.append("shipping_address_collection[allowed_countries][0]", "US");
     params.append("phone_number_collection[enabled]", "true");
     params.append("automatic_tax[enabled]", "false");

@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+
+  <title>Order Confirmed | Shrimp World</title>
+  <meta name="description" content="Thank you for your Shrimp World order. Your purchase was successful and your order is now being prepared." />
+  <meta name="robots" content="noindex, follow" />
+
+  <link rel="icon" type="image/png" href="assets/logo-shrimp-world.png" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body class="success-page">
+
+  <header class="header" id="top">
+    <div class="container header__inner">
+      <a class="brand" href="index.html" aria-label="Shrimp World home">
+        <img class="brand__logo" src="./assets/logo-shrimp-world.png" alt="Shrimp World logo" />
+        <div class="brand__meta">
+          <div class="brand__name">Shrimp World</div>
+          <div class="brand__tag">Premium Shrimp & Plants</div>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Primary navigation">
+        <a class="nav__link" href="index.html#products">Shop</a>
+        <a class="nav__link" href="index.html#difference">What Makes Us Different</a>
+        <a class="nav__link" href="index.html#reviews">Reviews</a>
+        <a class="nav__link" href="index.html#newsletter">Email Deals</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="success-hero">
+      <div class="container success-hero__inner">
+
+        <div class="success-card">
+          <div class="success-badge" aria-hidden="true">
+            <span>✓</span>
+          </div>
+
+          <div class="kicker">Order confirmed</div>
+
+          <h1>Thank you for your business!</h1>
+
+          <p class="success-lead">
+            Your checkout was successful. We appreciate your order and are preparing your Shrimp World purchase with care.
+          </p>
+
+          <div class="success-order-box">
+            <div class="success-order-row">
+              <span>Order Status</span>
+              <strong>Confirmed</strong>
+            </div>
+            <div class="success-order-row">
+              <span>Payment</span>
+              <strong>Successfully processed</strong>
+            </div>
+            <div class="success-order-row">
+              <span>Next Step</span>
+              <strong>Order preparation</strong>
+            </div>
+          </div>
+
+          <div class="success-actions">
+            <a class="btn btn--primary" href="index.html#products">Continue Shopping</a>
+            <a class="btn btn--ghost" href="index.html">Back to Home</a>
+          </div>
+
+          <p class="success-note">
+            A confirmation email should arrive shortly. Please save it for your records and shipping updates.
+          </p>
+        </div>
+
+        <div class="success-side">
+          <img src="./assets/logo-shrimp-world.png" alt="Shrimp World logo" />
+
+          <h2>Your order is in good hands.</h2>
+
+          <div class="success-trust-list">
+            <div class="success-trust-item">
+              <span>🛡️</span>
+              <div>
+                <strong>Alive Arrival Guarantee</strong>
+                <p>Every livestock order is packed with care and backed by our guarantee.</p>
+              </div>
+            </div>
+
+            <div class="success-trust-item">
+              <span>🚚</span>
+              <div>
+                <strong>Fast U.S. Shipping</strong>
+                <p>Your order will be prepared for safe transit within the United States.</p>
+              </div>
+            </div>
+
+            <div class="success-trust-item">
+              <span>🌿</span>
+              <div>
+                <strong>Healthy Stock & Plants</strong>
+                <p>We prioritize quality, clean packing, and beginner-friendly customer care.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section section--soft success-next">
+      <div class="container">
+        <h2 class="center">What happens next?</h2>
+
+        <div class="success-steps">
+          <div class="success-step">
+            <div class="success-step__num">01</div>
+            <h3>Order Review</h3>
+            <p>We review your order details and prepare your items for safe fulfillment.</p>
+          </div>
+
+          <div class="success-step">
+            <div class="success-step__num">02</div>
+            <h3>Careful Packing</h3>
+            <p>Your shrimp, plants, or supplies are packed with shipping safety in mind.</p>
+          </div>
+
+          <div class="success-step">
+            <div class="success-step__num">03</div>
+            <h3>Shipping Updates</h3>
+            <p>Watch your email for confirmation details, tracking, and delivery updates.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" id="footer">
+    <div class="container">
+      <div class="payrow" aria-label="Accepted payment methods">
+        <div class="paybadge"><span>AMEX</span></div>
+        <div class="paybadge"><span> Pay</span></div>
+        <div class="paybadge"><span>DISCOVER</span></div>
+        <div class="paybadge"><span>G Pay</span></div>
+        <div class="paybadge"><span>Mastercard</span></div>
+        <div class="paybadge"><span>PayPal</span></div>
+        <div class="paybadge"><span>shop pay</span></div>
+        <div class="paybadge"><span>VISA</span></div>
+      </div>
+
+      <div class="footer__meta">
+        <div>© <span id="year"></span> Shrimp World • All rights reserved.</div>
+        <div class="footer__links">
+          <a href="index.html#footer" class="footlink">Refund policy</a>
+          <span class="dot">•</span>
+          <a href="index.html#footer" class="footlink">Terms of service</a>
+          <span class="dot">•</span>
+          <a href="index.html#footer" class="footlink">Privacy policy</a>
+          <span class="dot">•</span>
+          <a href="index.html#footer" class="footlink">Shipping policy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const yearEl = document.getElementById("year");
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
+  </script>
+
+</body>
+</html>

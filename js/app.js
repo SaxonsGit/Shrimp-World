@@ -825,44 +825,6 @@ function renderCartDropdown() {
   if (els.cartTax) els.cartTax.textContent = money(tax);
   if (els.cartTotal) els.cartTotal.textContent = money(total);
 
-/* -----------------------------
-   Account Login Area
------------------------------ */
-
-const loginArea = document.getElementById("cartLoginArea")
-
-if(loginArea){
-
-  if(!state.user){
-
-    loginArea.innerHTML = `
-      <button class="btn btn--secondary" id="cartLoginBtn">
-        Login to your account
-      </button>
-    `
-
-    document.getElementById("cartLoginBtn").addEventListener("click",()=>{
-      document.getElementById("loginModal").classList.add("is-open")
-document.body.classList.add("modal-open")
-    })
-
-  } else {
-
-    loginArea.innerHTML = `
-      <div class="cart-user">
-        Logged in as <strong>${escapeHtml(state.user.first)}</strong>
-        <button id="logoutBtn" class="btn btn--ghost">Logout</button>
-      </div>
-    `
-
-    document.getElementById("logoutBtn").addEventListener("click",()=>{
-      logoutAccount()
-      renderCartDropdown()
-    })
-
-  }
-
-}
 
   // Wire remove buttons
   $$(".cartitem__remove", els.cartItems).forEach(btn => {
@@ -871,6 +833,8 @@ document.body.classList.add("modal-open")
     });
   });
 }
+
+
 
 
 
@@ -1439,21 +1403,16 @@ loginModal?.addEventListener("click",(e)=>{
   });
 }
 
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest("#buyNowBtn");
+  if (!btn) return;
 
-    if (els.buyNowBtn) {
-      els.buyNowBtn.addEventListener("click", () => {
-        const product = PRODUCTS.find((p) => p.id === state.selectedProductId);
-        if (!product) return;
-        toast("Demo checkout: connect Shopify/Stripe to enable real purchases.");
-      });
-    }
+  e.preventDefault();
 
-    if (els.morePaymentsBtn) {
-      els.morePaymentsBtn.addEventListener("click", () => {
-        toast("More payment options (demo). Add real providers on your checkout.");
-      });
-    }
+  openCartAndScroll();
+});
   }
+
 
   /* -----------------------------
    * Discount + Newsletter
@@ -1871,6 +1830,23 @@ loginModal?.addEventListener("click",(e)=>{
     });
   }
 
+
+  function openCartAndScroll() {
+  renderCartDropdown();
+  toggleCart(true);
+
+  if (els.cartDropdown) {
+    els.cartDropdown.setAttribute("aria-hidden", "false");
+  }
+
+  const scrollTarget = document.scrollingElement || document.documentElement;
+
+  scrollTarget.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+}
+
   /* -----------------------------
    * Init
    * ----------------------------- */
@@ -1926,7 +1902,6 @@ loginModal?.addEventListener("click",(e)=>{
 
 function wireCheckout() {
   const checkoutBtn = document.getElementById("checkoutBtn");
-  
 
   if (!checkoutBtn) return;
 
@@ -1963,8 +1938,6 @@ function wireCheckout() {
 }
 
 
-
-
   if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", init);
 } else {
@@ -1979,59 +1952,38 @@ ACCOUNT LOGIN / REGISTER SYSTEM
 =============================== */
 
 const accountBtn = document.getElementById("accountBtn");
-const loginModal = document.getElementById("loginModal");
-const registerModal = document.getElementById("registerModal");
+const loginModalGlobal = document.getElementById("loginModal");
+const registerModalGlobal = document.getElementById("registerModal");
 
 const closeLogin = document.getElementById("closeLoginModal");
 const openRegister = document.getElementById("openRegisterModal");
+const closeRegister = registerModalGlobal?.querySelector("[data-close]");
 
-const closeRegister = registerModal.querySelector("[data-close]");
-
-/* OPEN LOGIN MODAL */
-
-accountBtn.addEventListener("click", () => {
-
-  loginModal.classList.add("is-open");
-
+accountBtn?.addEventListener("click", () => {
+  loginModalGlobal?.classList.add("is-open");
 });
 
-/* CLOSE LOGIN */
-
-closeLogin.addEventListener("click", () => {
-
-  loginModal.classList.remove("is-open");
-
+closeLogin?.addEventListener("click", () => {
+  loginModalGlobal?.classList.remove("is-open");
 });
 
-/* OPEN REGISTER */
-
-openRegister.addEventListener("click", () => {
-
-  loginModal.classList.remove("is-open");
-  registerModal.classList.add("is-open");
-
+openRegister?.addEventListener("click", () => {
+  loginModalGlobal?.classList.remove("is-open");
+  registerModalGlobal?.classList.add("is-open");
 });
 
-/* CLOSE REGISTER */
-
-closeRegister.addEventListener("click", () => {
-
-  registerModal.classList.remove("is-open");
-
+closeRegister?.addEventListener("click", () => {
+  registerModalGlobal?.classList.remove("is-open");
 });
-
-/* CLICK OUTSIDE TO CLOSE */
 
 window.addEventListener("click", (e) => {
-
-  if (e.target === loginModal) {
-    loginModal.classList.remove("is-open");
+  if (e.target === loginModalGlobal) {
+    loginModalGlobal.classList.remove("is-open");
   }
 
-  if (e.target === registerModal) {
-    registerModal.classList.remove("is-open");
+  if (e.target === registerModalGlobal) {
+    registerModalGlobal.classList.remove("is-open");
   }
-
 });
 
 window.addEventListener("resize", () => {
