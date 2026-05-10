@@ -133,6 +133,7 @@
     // Discount
     cornerDeal: $("#cornerDeal"),
     openDiscountBtn: $("#openDiscountBtn"),
+   
     discountModal: $("#discountModal"),
     discountForm: $("#discountForm"),
     discountEmail: $("#discountEmail"),
@@ -439,7 +440,7 @@
       featured: true,
       priceFrom: 49.99,
       compareAt: 75.99,
-      badge: "Sale",
+      badge: "sale",
       images: [
         "./assets/products/bloody-mary/1.jpg",
         "./assets/products/bloody-mary/2.jpg",
@@ -1460,7 +1461,7 @@ document.addEventListener("click", (e) => {
         const email = String(els.newsletterEmail?.value || "").trim();
         if (!email) return;
         localStorage.setItem(STORAGE.NEWSLETTER_EMAIL, email);
-        toast("Subscribed! (Demo: stored locally)");
+        toast("Subscribed! Thank you for joining!");
         els.newsletterForm.reset();
       });
     }

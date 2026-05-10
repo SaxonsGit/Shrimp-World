@@ -1963,7 +1963,7 @@ body.modal-open{
    MOBILE HEADER WIDTH FIX
 ========================= */
 
-@media (max-width: 650px) {
+@media (max-width: 980px) {
   .header {
     overflow: visible;
   }
@@ -2033,7 +2033,7 @@ body.modal-open{
   }
 }
 
-@media (max-width: 390px) {
+@media (max-width: 980px) {
   .brand__name {
     font-size: 18px;
   }
@@ -2058,4 +2058,143 @@ body.modal-open{
   .header__actions {
     gap: 6px;
   }
+}
+
+
+@media (max-width: 980px) {
+  
+
+  .cornerdeal {
+    z-index: -1;
+    visibility: hidden;
+  }
+}
+
+
+/* =========================================
+   MOBILE TOPBAR FIX
+   ========================================= */
+
+@media (max-width: 980px) {
+
+  .topbar {
+    padding: 10px 0;
+    overflow: hidden;
+  }
+
+  .topbar__inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    padding: 0 14px;
+    min-height: auto;
+  }
+
+  .topbar__left {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    min-width: 0;
+  }
+
+  .topbar__icon {
+    flex-shrink: 0;
+    font-size: 14px;
+    margin-right: 6px;
+  }
+
+  .topbar__text {
+    font-size: 14px;
+    line-height: 1.35;
+    text-align: center;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    width: 100%;
+  }
+
+  .topbar__text strong {
+    font-size: 15px;
+  }
+
+  .topbar__cta {
+    display: none;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE PRODUCT TOOLS FIX
+   ========================================= */
+
+@media (max-width: 980px) {
+
+  #products .section__head {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 22px;
+  }
+
+  #products .section__head h2 {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  #products .section__tools {
+    width: 100%;
+    max-width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+
+    overflow: visible;
+  }
+
+  #products .search,
+  #products .select {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  #products .search input {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE CART POSITION FIX
+   ========================================= */
+
+@media (max-width: 980px) {
+
+  .cart,
+  .cart-drawer,
+  .cart-panel,
+  .cart-modal {
+    top: 160px !important;
+
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+
+    width: calc(100% - 24px) !important;
+    max-width: 760px;
+
+    z-index: 99999;
+  }
+
 }
