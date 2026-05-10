@@ -2023,9 +2023,7 @@ window.addEventListener("click", (e) => {
   }
 });
 
-window.addEventListener("resize", () => {
-document.body.style.width = window.innerWidth + "px";
-});
+
 
  /* Smooth anchor scrolling fix */
 
