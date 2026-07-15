@@ -26,7 +26,13 @@
 
 <link rel="icon" type="image/png" href="assets/logo-shrimp-world.png" />
 
-<link rel="stylesheet" href="/css/styles.css?v=10">
+<script>
+  (() => {
+    const isLocalPreview = ["localhost", "127.0.0.1"].includes(window.location.hostname);
+    const assetVersion = isLocalPreview ? Date.now() : "10";
+    document.write(`<link rel="stylesheet" href="/css/styles.css?v=${assetVersion}">`);
+  })();
+</script>
 
 <script type="application/ld+json">
 {
@@ -633,6 +639,12 @@
 </div>
 
   <script src="https://js.stripe.com/v3/"></script>
-  <script src="/js/app.js?v=10"></script>
+  <script>
+    (() => {
+      const isLocalPreview = ["localhost", "127.0.0.1"].includes(window.location.hostname);
+      const assetVersion = isLocalPreview ? Date.now() : "12";
+      document.write(`<script src="/js/app.js?v=${assetVersion}"><\/script>`);
+    })();
+  </script>
 </body>
 </html>

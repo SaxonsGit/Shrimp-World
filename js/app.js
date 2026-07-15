@@ -996,18 +996,12 @@ loginModal?.addEventListener("click",(e)=>{
   function initCountdown() {
     if (!els.cdDays || !els.cdHours || !els.cdMins || !els.cdSecs) return;
 
-    // Sale end: next 48 hours from first visit (persist)
-    const key = "sw_sale_end_v1";
-    let end = Number(localStorage.getItem(key) || 0);
-    const now = Date.now();
-    if (!end || end < now) {
-      end = now + 48 * 60 * 60 * 1000;
-      localStorage.setItem(key, String(end));
-    }
+    // Start a fresh 48-hour sale countdown for every page load.
+    // This deliberately does not use localStorage so the mobile preview cannot reopen at 00:00:00.
+    const end = Date.now() + 48 * 60 * 60 * 1000;
 
     const tick = () => {
-      const diff = Math.max(0, end - Date.now());
-      const totalSeconds = Math.floor(diff / 1000);
+      const totalSeconds = Math.max(0, Math.floor((end - Date.now()) / 1000));
       const days = Math.floor(totalSeconds / (24 * 3600));
       const hours = Math.floor((totalSeconds % (24 * 3600)) / 3600);
       const mins = Math.floor((totalSeconds % 3600) / 60);
@@ -1017,12 +1011,6 @@ loginModal?.addEventListener("click",(e)=>{
       els.cdHours.textContent = pad2(hours);
       els.cdMins.textContent = pad2(mins);
       els.cdSecs.textContent = pad2(secs);
-
-      if (diff <= 0) {
-        // Restart a 24h cycle for demo purposes
-        end = Date.now() + 24 * 60 * 60 * 1000;
-        localStorage.setItem(key, String(end));
-      }
     };
 
     tick();
@@ -1130,7 +1118,7 @@ loginModal?.addEventListener("click",(e)=>{
     if (!els.productGrid) return;
 
     const items = getFilteredSortedProducts();
-    const limit = state.viewAll ? items.length : 12;
+    const limit = state.viewAll ? items.length : 8;
     const slice = items.slice(0, limit);
 
     els.productGrid.innerHTML = slice.map(cardHTML).join("");
@@ -1189,7 +1177,7 @@ loginModal?.addEventListener("click",(e)=>{
 
     if (els.viewAllBtn) {
       els.viewAllBtn.textContent = state.viewAll ? "Show less" : "View all";
-      els.viewAllBtn.style.display = items.length > 12 ? "" : "none";
+      els.viewAllBtn.style.display = items.length > 8 ? "" : "none";
     }
   }
 
@@ -1885,19 +1873,209 @@ function wireMobileMenu() {
 }
 
   /* -----------------------------
+   * Owner price menu (local browser storage)
+   * ----------------------------- */
+  const OWNER_PRICE_STORAGE_KEY = "sw_owner_product_prices_v1";
+  const OWNER_MENU_PASSCODE = "Drew-Ringswald";
+
+  function applyStoredProductPrices() {
+    const savedPrices = safeJSONParse(localStorage.getItem(OWNER_PRICE_STORAGE_KEY), {});
+    if (!savedPrices || typeof savedPrices !== "object") return;
+
+    PRODUCTS.forEach((product) => {
+      const prices = savedPrices[product.id];
+      if (!Array.isArray(prices) || !product.variants?.length) return;
+
+      product.variants.forEach((variant, index) => {
+        const price = Number(prices[index]);
+        if (Number.isFinite(price) && price > 0) variant.price = price;
+      });
+      product.priceFrom = Math.min(...product.variants.map((variant) => Number(variant.price)));
+    });
+  }
+
+  function ownerMenuHTML() {
+    const rows = PRODUCTS.map((product) => {
+      const variants = product.variants?.length
+        ? product.variants
+        : [{ label: "Default", price: product.priceFrom }];
+
+      return `
+        <section class="owner-menu__product">
+          <h3>${escapeHtml(product.name)}</h3>
+          ${variants.map((variant, index) => `
+            <label class="owner-menu__variant">
+              <span>${escapeHtml(variant.label)}</span>
+              <span class="owner-menu__field">
+                <span aria-hidden="true">$</span>
+                <input class="owner-menu__price" type="number" min="0.01" step="0.01" inputmode="decimal" value="${Number(variant.price).toFixed(2)}" data-product-id="${escapeHtml(product.id)}" data-variant-index="${index}" aria-label="Price for ${escapeHtml(product.name)}, ${escapeHtml(variant.label)}" />
+              </span>
+            </label>
+          `).join("")}
+        </section>
+      `;
+    }).join("");
+
+    return `
+      <div class="owner-menu" id="ownerMenu" role="dialog" aria-modal="true" aria-labelledby="ownerMenuTitle" aria-hidden="true">
+        <div class="owner-menu__overlay" data-owner-menu-close="true"></div>
+        <div class="owner-menu__panel" role="document">
+          <div class="owner-menu__header">
+            <div>
+              <p class="owner-menu__eyebrow">Owner tools</p>
+              <h2 id="ownerMenuTitle">Product pricing</h2>
+              <p>Update each package price. The package labels show the product quantities sold on the main page.</p>
+            </div>
+            <button class="owner-menu__close" type="button" data-owner-menu-close="true" aria-label="Close owner menu">×</button>
+          </div>
+          <form class="owner-menu__gate" id="ownerMenuPasscodeForm">
+            <label class="owner-menu__gate-label" for="ownerMenuPasscode">Passcode</label>
+            <input class="owner-menu__passcode" id="ownerMenuPasscode" type="password" autocomplete="current-password" required />
+            <p class="owner-menu__gate-error" id="ownerMenuPasscodeError" role="alert" hidden>That passcode is incorrect.</p>
+            <button class="btn btn--primary" type="submit">Unlock pricing</button>
+          </form>
+          <form id="ownerMenuForm" hidden>
+            <div class="owner-menu__products">${rows}</div>
+            <div class="owner-menu__actions">
+              <button class="btn btn--ghost" type="button" id="ownerMenuReset">Reset saved prices</button>
+              <button class="btn btn--primary" type="submit">Save prices</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    `;
+  }
+
+  function wireOwnerMenu() {
+    const brand = $(".header .brand");
+    if (!brand) return;
+
+    document.body.insertAdjacentHTML("beforeend", ownerMenuHTML());
+    const menu = $("#ownerMenu");
+    const form = $("#ownerMenuForm");
+    const passcodeForm = $("#ownerMenuPasscodeForm");
+    const passcodeInput = $("#ownerMenuPasscode");
+    const passcodeError = $("#ownerMenuPasscodeError");
+    let logoClicks = 0;
+    let clickTimer;
+
+    const showPasscodeGate = () => {
+      form.hidden = true;
+      passcodeForm.hidden = false;
+      passcodeForm.reset();
+      passcodeError.hidden = true;
+    };
+    const closeOwnerMenu = () => {
+      menu.classList.remove("is-open");
+      menu.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+      showPasscodeGate();
+      brand.focus();
+    };
+    const openOwnerMenu = () => {
+      showPasscodeGate();
+      menu.classList.add("is-open");
+      menu.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+      passcodeInput.focus();
+    };
+
+    passcodeForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      if (passcodeInput.value !== OWNER_MENU_PASSCODE) {
+        passcodeError.hidden = false;
+        passcodeInput.select();
+        return;
+      }
+
+      passcodeForm.hidden = true;
+      form.hidden = false;
+      $(".owner-menu__price", menu)?.focus();
+    });
+
+    brand.addEventListener("click", (event) => {
+      event.preventDefault();
+      logoClicks += 1;
+      window.clearTimeout(clickTimer);
+      clickTimer = window.setTimeout(() => { logoClicks = 0; }, 4000);
+
+      if (logoClicks === 10) {
+        logoClicks = 0;
+        window.clearTimeout(clickTimer);
+        openOwnerMenu();
+      }
+    });
+
+    menu.querySelectorAll('[data-owner-menu-close="true"]').forEach((control) => {
+      control.addEventListener("click", closeOwnerMenu);
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && menu.classList.contains("is-open")) closeOwnerMenu();
+    });
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const savedPrices = {};
+      let isValid = true;
+
+      menu.querySelectorAll(".owner-menu__price").forEach((input) => {
+        const price = Number(input.value);
+        if (!Number.isFinite(price) || price <= 0) {
+          isValid = false;
+          input.setAttribute("aria-invalid", "true");
+          return;
+        }
+
+        input.removeAttribute("aria-invalid");
+        const product = PRODUCTS.find((item) => item.id === input.dataset.productId);
+        const index = Number(input.dataset.variantIndex);
+        if (!product || !product.variants?.[index]) return;
+
+        product.variants[index].price = price;
+        if (!savedPrices[product.id]) savedPrices[product.id] = [];
+        savedPrices[product.id][index] = price;
+      });
+
+      if (!isValid) {
+        toast("Enter a valid price greater than $0.00 for every package.");
+        return;
+      }
+
+      PRODUCTS.forEach((product) => {
+        if (product.variants?.length) {
+          product.priceFrom = Math.min(...product.variants.map((variant) => Number(variant.price)));
+        }
+      });
+      localStorage.setItem(OWNER_PRICE_STORAGE_KEY, JSON.stringify(savedPrices));
+      renderGrid();
+      if (state.selectedProductId) openProduct(state.selectedProductId);
+      toast("Product prices saved on this device.");
+      closeOwnerMenu();
+    });
+
+    $("#ownerMenuReset", menu).addEventListener("click", () => {
+      localStorage.removeItem(OWNER_PRICE_STORAGE_KEY);
+      window.location.reload();
+    });
+  }
+
+  /* -----------------------------
    * Init
    * ----------------------------- */
   function init(){
-
+  // Initialize customer-facing mobile navigation and catalog before optional local tools.
+  // This prevents an optional setup error from leaving the mobile menu or product grid inert.
   loadCart();
-  loadSession();
-
   initCountdown();
-
   wireNav();
   wireMobileMenu();
   wireProductControls();
   wireProductViewButtons();
+  renderGrid();
+
+  applyStoredProductPrices();
+  wireOwnerMenu();
+  loadSession();
   wireDiscount();
   wireReviews();
   wireModalOverlayClose();
@@ -1905,18 +2083,13 @@ function wireMobileMenu() {
   wireAccounts();
 
   loadReviews();
-
   renderReviewBreakdown();
   renderReviewList();
-
   renderGrid();
-
-  /* Cart button wiring */
 
   /* -----------------------------
    * Cart Button Wiring
    * ----------------------------- */
-
   if (els.cartBtn) {
     els.cartBtn.addEventListener("click", () => {
       const isOpen = els.cartDropdown?.classList.contains("is-open");
@@ -1928,8 +2101,6 @@ function wireMobileMenu() {
   if (els.closeCartBtn) {
     els.closeCartBtn.addEventListener("click", () => toggleCart(false));
   }
-
-  renderGrid();
 }
 
 

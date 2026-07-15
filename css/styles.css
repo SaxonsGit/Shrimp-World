@@ -2198,3 +2198,49 @@ body.modal-open{
   }
 
 }
+
+/* Owner price menu */
+.owner-menu {
+  position: fixed;
+  inset: 0;
+  display: none;
+  z-index: 100001;
+}
+.owner-menu.is-open { display: grid; place-items: center; }
+.owner-menu__overlay { position: absolute; inset: 0; background: rgba(12,18,34,.62); }
+.owner-menu__panel {
+  position: relative;
+  width: min(760px, calc(100% - 32px));
+  max-height: min(760px, calc(100dvh - 32px));
+  overflow: auto;
+  padding: 24px;
+  border-radius: var(--radius2);
+  background: var(--card);
+  box-shadow: 0 28px 80px rgba(12,18,34,.28);
+}
+.owner-menu__header { display: flex; gap: 18px; justify-content: space-between; margin-bottom: 20px; }
+.owner-menu__header h2 { margin: 2px 0 6px; }
+.owner-menu__header p { margin: 0; color: var(--muted); line-height: 1.5; }
+.owner-menu__eyebrow { color: var(--orange) !important; font-size: 12px; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; }
+.owner-menu__close { width: 40px; height: 40px; flex: 0 0 auto; border: 1px solid var(--line); border-radius: 50%; background: #fff; cursor: pointer; font-size: 24px; }
+.owner-menu__products { display: grid; gap: 12px; }
+.owner-menu__product { padding: 16px; border: 1px solid var(--line); border-radius: 14px; background: var(--soft); }
+.owner-menu__product h3 { margin: 0 0 10px; font-size: 16px; }
+.owner-menu__variant { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 9px 0; border-top: 1px solid rgba(12,18,34,.08); font-size: 14px; font-weight: 700; }
+.owner-menu__field { display: flex; align-items: center; width: 118px; padding-left: 10px; border: 1px solid rgba(12,18,34,.16); border-radius: 10px; background: #fff; }
+.owner-menu__price { width: 100%; padding: 9px; border: 0; outline: none; background: transparent; font-weight: 800; }
+.owner-menu__price[aria-invalid="true"] { box-shadow: inset 0 0 0 2px #c42d2d; }
+.owner-menu__actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+.owner-menu__gate { display: grid; gap: 12px; }
+.owner-menu__gate-label { font-size: 14px; font-weight: 800; }
+.owner-menu__passcode { width: 100%; padding: 12px 14px; border: 1px solid rgba(12,18,34,.16); border-radius: 10px; outline: none; }
+.owner-menu__passcode:focus { border-color: rgba(31,95,255,.45); box-shadow: 0 0 0 4px rgba(31,95,255,.12); }
+.owner-menu__gate-error { margin: 0; color: #b42318; font-size: 14px; font-weight: 700; }
+@media (max-width: 560px) {
+  .owner-menu__panel { padding: 18px; }
+  .owner-menu__header { align-items: flex-start; }
+  .owner-menu__variant { align-items: flex-start; flex-direction: column; }
+  .owner-menu__field { width: 100%; }
+  .owner-menu__actions { flex-direction: column-reverse; }
+  .owner-menu__actions .btn { width: 100%; }
+}
