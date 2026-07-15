@@ -1956,8 +1956,10 @@ function wireMobileMenu() {
     const passcodeForm = $("#ownerMenuPasscodeForm");
     const passcodeInput = $("#ownerMenuPasscode");
     const passcodeError = $("#ownerMenuPasscodeError");
+    const panel = $(".owner-menu__panel", menu);
     let logoClicks = 0;
     let clickTimer;
+    let pageScrollY = 0;
 
     const showPasscodeGate = () => {
       form.hidden = true;
@@ -1970,14 +1972,18 @@ function wireMobileMenu() {
       menu.setAttribute("aria-hidden", "true");
       document.body.style.overflow = "";
       showPasscodeGate();
-      brand.focus();
+      window.scrollTo({ top: pageScrollY, left: 0, behavior: "auto" });
+      brand.focus({ preventScroll: true });
     };
     const openOwnerMenu = () => {
+      pageScrollY = window.scrollY;
       showPasscodeGate();
+      panel.scrollTop = 0;
       menu.classList.add("is-open");
       menu.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
-      passcodeInput.focus();
+      passcodeInput.focus({ preventScroll: true });
+      window.scrollTo({ top: pageScrollY, left: 0, behavior: "auto" });
     };
 
     passcodeForm.addEventListener("submit", (event) => {
@@ -1990,7 +1996,8 @@ function wireMobileMenu() {
 
       passcodeForm.hidden = true;
       form.hidden = false;
-      $(".owner-menu__price", menu)?.focus();
+      panel.scrollTop = 0;
+      $(".owner-menu__price", menu)?.focus({ preventScroll: true });
     });
 
     brand.addEventListener("click", (event) => {

@@ -29,7 +29,7 @@
 <script>
   (() => {
     const isLocalPreview = ["localhost", "127.0.0.1"].includes(window.location.hostname);
-    const assetVersion = isLocalPreview ? Date.now() : "10";
+    const assetVersion = isLocalPreview ? Date.now() : "13";
     document.write(`<link rel="stylesheet" href="/css/styles.css?v=${assetVersion}">`);
   })();
 </script>
@@ -642,7 +642,7 @@
   <script>
     (() => {
       const isLocalPreview = ["localhost", "127.0.0.1"].includes(window.location.hostname);
-      const assetVersion = isLocalPreview ? Date.now() : "12";
+      const assetVersion = isLocalPreview ? Date.now() : "13";
       document.write(`<script src="/js/app.js?v=${assetVersion}"><\/script>`);
     })();
   </script>
